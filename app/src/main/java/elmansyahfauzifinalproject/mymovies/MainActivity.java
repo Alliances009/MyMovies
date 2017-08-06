@@ -2,6 +2,7 @@ package elmansyahfauzifinalproject.mymovies;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -9,6 +10,7 @@ import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -18,7 +20,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements Callback<Movie> {
+public class MainActivity extends AppCompatActivity implements Callback<Movie>,MovieAdapter.ItemClickListener {
 
 
     private static final String TAG = "MainActivity";
@@ -37,8 +39,9 @@ public class MainActivity extends AppCompatActivity implements Callback<Movie> {
     }
 
     private void initComponent() {
+        Integer span_count = getResources().getInteger(R.integer.span_count);
         rvMovies = (RecyclerView) findViewById(R.id.rv_movie);
-        layoutManager = new GridLayoutManager(MainActivity.this,2);
+        layoutManager = new GridLayoutManager(MainActivity.this,span_count);
         rvMovies.setLayoutManager(layoutManager);
 
     }
@@ -63,14 +66,9 @@ public class MainActivity extends AppCompatActivity implements Callback<Movie> {
             movieList = movie.getResults();
             Log.d(TAG, "onResponse: "+movie.getTotalResults());
             Log.d(TAG, "onResponse: GRID = "+layoutManager.getItemCount());
-            movieAdapter = new MovieAdapter(movieList);
+            movieAdapter = new MovieAdapter(movieList,MainActivity.this);
             rvMovies.setAdapter(movieAdapter);
             Log.d(TAG, "onResponse: GRID2 = "+layoutManager.getItemCount());
-            if (movie.getPage() == 1 || true){
-
-            }else{
-
-            }
         }else{
             Log.d(TAG, "onResponse: Movie null");
         }
@@ -89,5 +87,18 @@ public class MainActivity extends AppCompatActivity implements Callback<Movie> {
     @Override
     public void onFailure(Call<Movie> call, Throwable t) {
 
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        showDetail(position);
+        Toast.makeText(this, "Pos "+position, Toast.LENGTH_SHORT).show();
+    }
+
+    private void showDetail(int position) {
+        Result data = movieList.get(position);
+        Intent intenDetail = new Intent(MainActivity.this,DetailActivity.class);
+        intenDetail.putExtra("DATA",data);
+        startActivity(intenDetail);
     }
 }

@@ -58,7 +58,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.Adapter> {
         return listData.size();
     }
 
-    public class Adapter extends RecyclerView.ViewHolder {
+    public class Adapter extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView tvTitle;
         ImageView ivPoster;
@@ -67,6 +67,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.Adapter> {
             super(itemView);
             tvTitle = (TextView) itemView.findViewById(R.id.tv_title);
             ivPoster = (ImageView) itemView.findViewById(R.id.iv_poster);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            final int position = getAdapterPosition();
+            listener.onItemClick(position);
         }
     }
 }
