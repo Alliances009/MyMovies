@@ -2,6 +2,7 @@ package elmansyahfauzifinalproject.mymovies;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 
 /**
@@ -37,6 +40,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.Adapter> {
         public void onItemClick(int position);
     }
 
+    public Result getData(int pos){
+        return listData.get(pos);
+    }
+
     @Override
     public Adapter onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movie,parent,false);
@@ -44,6 +51,17 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.Adapter> {
         return holder;
 
     }
+
+    public void append(List<Result> dataToAppend) {
+            int firstPosition = listData.size();
+            Log.d(TAG, "append: "+listData.size());
+            listData.addAll(dataToAppend);
+            notifyItemRangeChanged(firstPosition, dataToAppend.size()-1);
+            //notifyDataSetChanged();
+
+    }
+
+
 
     @Override
     public void onBindViewHolder(Adapter holder, int position) {

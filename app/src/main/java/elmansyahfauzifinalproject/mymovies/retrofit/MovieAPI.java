@@ -3,6 +3,7 @@ package elmansyahfauzifinalproject.mymovies.retrofit;
 import elmansyahfauzifinalproject.mymovies.Movie;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -11,6 +12,6 @@ import retrofit2.http.Query;
 
 public interface MovieAPI {
 
-    @GET("movie/popular")
-    Call<Movie> getPopularMovies(@Query("page") int page);
+    @GET("movie/{category}")
+    Call<Movie> getMovies(@Path("category") String category, @Query("page") int page);
 }
