@@ -1,6 +1,5 @@
 package elmansyahfauzifinalproject.mymovies;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +11,8 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import elmansyahfauzifinalproject.mymovies.model.Result;
 
 import static android.content.ContentValues.TAG;
 
@@ -26,6 +27,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.Adapter> {
 
     private List<Result> listData;
     private ItemClickListener listener;
+    private boolean isFavorite = false;
 
     public MovieAdapter(List<Result> listData) {
         this.listData = listData;
@@ -35,6 +37,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.Adapter> {
         this.listData = listData;
         this.listener = listener;
     }
+
+    public MovieAdapter(List<Result> listData, ItemClickListener listener,boolean isFavorite) {
+        this.listData = listData;
+        this.listener = listener;
+        this.isFavorite = isFavorite;
+    }
+
 
     public interface ItemClickListener{
         public void onItemClick(int position);
@@ -53,11 +62,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.Adapter> {
     }
 
     public void append(List<Result> dataToAppend) {
+        if (!isFavorite){
             int firstPosition = listData.size();
             Log.d(TAG, "append: "+listData.size());
             listData.addAll(dataToAppend);
             notifyItemRangeChanged(firstPosition, dataToAppend.size()-1);
             //notifyDataSetChanged();
+        }
 
     }
 
