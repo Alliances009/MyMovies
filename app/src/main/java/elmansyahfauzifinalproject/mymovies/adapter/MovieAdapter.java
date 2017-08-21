@@ -1,4 +1,4 @@
-package elmansyahfauzifinalproject.mymovies;
+package elmansyahfauzifinalproject.mymovies.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,6 +12,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import elmansyahfauzifinalproject.mymovies.R;
+import elmansyahfauzifinalproject.mymovies.utils.UrlComposer;
 import elmansyahfauzifinalproject.mymovies.model.Result;
 
 import static android.content.ContentValues.TAG;

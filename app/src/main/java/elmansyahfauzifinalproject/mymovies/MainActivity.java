@@ -1,25 +1,27 @@
 package elmansyahfauzifinalproject.mymovies;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import elmansyahfauzifinalproject.mymovies.adapter.MovieAdapter;
+import elmansyahfauzifinalproject.mymovies.model.Movie;
+import elmansyahfauzifinalproject.mymovies.model.Result;
 import elmansyahfauzifinalproject.mymovies.retrofit.MovieAPI;
 import elmansyahfauzifinalproject.mymovies.retrofit.ServiceGenerator;
+import elmansyahfauzifinalproject.mymovies.utils.FavoriteMovie;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,33 +36,44 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
     private List<Result> movieList;
     private int lastPage = 1;
     private String category = "popular";
-    private Boolean isLoading = false,isLastPage = false;
+    private Boolean isLoading = false,isLastPage = false,isFavorite = false;
     public int page = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Realm.init(this);
         setContentView(R.layout.activity_main);
         initComponent();
         getMovie(category,1);
         rvMovies.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
-            GridLayoutManager gridLayoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
-            int visibleItemCount = gridLayoutManager.getChildCount();
-            int totalItemCount = gridLayoutManager.getItemCount();
-            int pastVisiblesItems = gridLayoutManager.findFirstVisibleItemPosition();
-            if ((visibleItemCount + pastVisiblesItems) >= totalItemCount && pastVisiblesItems >= 0) {
-                if (!isLastPage){
-                    isLoading = false;
-                    lastPage += 1;
-                    getMovie(category,lastPage);
+            if(!isFavorite)
+            {
+                GridLayoutManager gridLayoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
+                int visibleItemCount = gridLayoutManager.getChildCount();
+                int totalItemCount = gridLayoutManager.getItemCount();
+                int pastVisiblesItems = gridLayoutManager.findFirstVisibleItemPosition();
+                if ((visibleItemCount + pastVisiblesItems) >= totalItemCount && pastVisiblesItems >= 0) {
+                    if (!isLastPage){
+                        isLoading = false;
+                        lastPage += 1;
+                        getMovie(category,lastPage);
+                    }
                 }
+
             }
         }
     });
 
+    }
+
+    private void showMovieList(List<Result> movieList) {
+        movieAdapter = new MovieAdapter(movieList,MainActivity.this,true);
+        rvMovies.setAdapter(movieAdapter);
     }
 
     private void initComponent() {
@@ -70,12 +83,12 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
         rvMovies.setLayoutManager(layoutManager);
     }
 
-    private Call<Movie> getListMovie(String category,int page){
+    private Call<Movie> getListMovie(String category, int page){
         return  ServiceGenerator.createService(MovieAPI.class).getMovies(category,page);
     }
 
     private void getMovie(String category,int page){
-        if (!isLoading || page == 1) {
+        if ((!isLoading || page == 1) && !isFavorite) {
             getListMovie(category, page).enqueue(new Callback<Movie>() {
                 @Override
                 public void onResponse(Call<Movie> call, Response<Movie> response) {
@@ -119,8 +132,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
 
     private void showDetail(int position) {
         Result data = movieAdapter.getData(position);
-        Intent intenDetail = new Intent(MainActivity.this,DetailActivity.class);
+        Log.d(TAG, "showDetail: "+position);
+        Intent intenDetail = new Intent(MainActivity.this,Detail.class);
         intenDetail.putExtra("DATA",data);
+        intenDetail.putExtra("IS_FAVORITE",false);
         startActivity(intenDetail);
     }
 
@@ -135,12 +150,40 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.mn_popular:
+                isFavorite = false;
                 getMovie("popular",1);
                 break;
             case R.id.mn_top_rated:
+                isFavorite = false;
                 getMovie("top_rated",1);
+                break;
+            case R.id.mn_favorite:
+                isFavorite = true;
+                loadFavorite();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void loadFavorite() {
+        Realm realm = null;
+        try{
+            realm = Realm.getDefaultInstance();
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    List<Result> data = new ArrayList<Result>();
+                    RealmResults<FavoriteMovie> favoriteMovies = realm.where(FavoriteMovie.class).findAll();
+                    for (FavoriteMovie favoriteMovie : favoriteMovies){
+                        data.add(favoriteMovie.setMovie(favoriteMovie));
+                    }
+                    showMovieList(data);
+                }
+            });
+        }finally {
+            if (realm != null){
+                realm.close();
+            }
+        }
     }
 }

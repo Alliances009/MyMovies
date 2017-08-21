@@ -1,6 +1,8 @@
-package elmansyahfauzifinalproject.mymovies;
+package elmansyahfauzifinalproject.mymovies.utils;
 
 import android.net.Uri;
+
+import elmansyahfauzifinalproject.mymovies.BuildConfig;
 
 /**
  * Created by ALLIANCES on 7/30/2017.

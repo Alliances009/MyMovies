@@ -1,5 +1,5 @@
 
-package elmansyahfauzifinalproject.mymovies;
+package elmansyahfauzifinalproject.mymovies.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

@@ -1,4 +1,4 @@
-package elmansyahfauzifinalproject.mymovies;
+package elmansyahfauzifinalproject.mymovies.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
