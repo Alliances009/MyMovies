@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="8dp"
-    android:paddingBottom="10dp">
+    android:layout_marginTop="@dimen/md_pad"
+    android:padding="@dimen/md_pad">
 
     <TextView
         android:id="@+id/tv_author"
@@ -19,8 +19,8 @@
         android:layout_height="wrap_content"/>
     <View
         android:layout_width="match_parent"
-        android:background="#999"
-        android:layout_marginTop="8dp"
-        android:layout_height="2dp"></View>
+        android:background="@color/colorLine"
+        android:layout_marginTop="@dimen/md_pad"
+        android:layout_height="@dimen/md_line"></View>
 
 </LinearLayout>

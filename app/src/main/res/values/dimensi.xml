@@ -1,2 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+
+    <dimen name="sm_pad">4dp</dimen>
+    <dimen name="md_pad">8dp</dimen>
+    <dimen name="lg_pad">16dp</dimen>
+    <dimen name="sm_txt">16sp</dimen>
+    <dimen name="md_txt">18sp</dimen>
+    <dimen name="lg_txt">22sp</dimen>
+
+    <dimen name="md_line">2dp</dimen>
+
+</resources>

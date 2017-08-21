@@ -21,4 +21,14 @@ public class GenerateView {
         tvDescription.setText(description);
         return view;
     }
+
+    public static View getVideo(Context context,String name, String type){
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate(R.layout.item_video, null);
+        TextView tvName = (TextView) view.findViewById(R.id.tv_name);
+        tvName.setText(name);
+        TextView tvType = (TextView) view.findViewById(R.id.tv_type);
+        tvType.setText(type);
+        return view;
+    }
 }

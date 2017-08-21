@@ -1,6 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/md_pad"
+    android:padding="@dimen/md_pad"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
 
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="4"
+        >
+
+        <ImageView
+            android:id="@+id/iv_thumbnail"
+            android:layout_height="62dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:src="@drawable/ic_thumb_play"
+            />
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:layout_width="0dp"
+            android:orientation="vertical"
+            android:padding="@dimen/md_pad"
+            >
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:layout_width="match_parent"/>
+
+            <TextView
+                android:id="@+id/tv_type"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:background="@color/colorLine"
+        android:layout_marginTop="@dimen/md_pad"
+        android:layout_height="@dimen/md_line"></View>
 </LinearLayout>

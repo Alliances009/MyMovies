@@ -13,6 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import elmansyahfauzifinalproject.mymovies.views.MovieDetail;
 import elmansyahfauzifinalproject.mymovies.views.MovieReview;
+import elmansyahfauzifinalproject.mymovies.views.MovieVideo;
 
 public class Detail extends AppCompatActivity implements ActionBar.TabListener {
 
@@ -73,7 +74,7 @@ public class Detail extends AppCompatActivity implements ActionBar.TabListener {
             }else if(position == 1){
                 frag = new MovieReview();
             }else if(position == 2){
-                frag = new MovieDetail();
+                frag = new MovieVideo();
             }
             frag.setArguments(bundle);
             return frag;
@@ -104,7 +105,7 @@ public class Detail extends AppCompatActivity implements ActionBar.TabListener {
 
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-
+        viewPager.setCurrentItem(tab.getPosition());
     }
 
     @Override
