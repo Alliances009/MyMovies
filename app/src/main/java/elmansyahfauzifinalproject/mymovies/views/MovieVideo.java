@@ -1,5 +1,6 @@
 package elmansyahfauzifinalproject.mymovies.views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import com.google.android.youtube.player.YouTubePlayer;
 
 import java.util.List;
 
@@ -20,6 +23,7 @@ import elmansyahfauzifinalproject.mymovies.model.Video;
 import elmansyahfauzifinalproject.mymovies.model.VideoResult;
 import elmansyahfauzifinalproject.mymovies.retrofit.MovieAPI;
 import elmansyahfauzifinalproject.mymovies.retrofit.ServiceGenerator;
+import elmansyahfauzifinalproject.mymovies.utils.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -58,13 +62,20 @@ public class MovieVideo extends Fragment {
                 VideoResult res = response.body();
                 if (res != null){
                     List<Video> data = res.getResults();
-                    for (Video video : data){
+                    for (final Video video : data){
                         View viewRow = GenerateView
                                 .getVideo(
                                         getActivity().getApplicationContext(),
                                         video.getName(),
                                         video.getType()
                                         );
+                            viewRow.findViewById(R.id.video_content).setOnClickListener(new View.OnClickListener() {
+                                                           @Override
+                                                           public void onClick(View v) {
+                                                               playYoutube(video.getKey());
+                                                           }
+                                                       }
+                            );
                             llVideo.addView(viewRow);
                     }
                 }
@@ -85,6 +96,19 @@ public class MovieVideo extends Fragment {
             data = (Result) bundle.get(Detail.MOVIE_KEY);
         }
         return data;
+    }
+
+    private void playYoutube(String videoId) {
+        if (Util.isPackageInstalled("com.google.android.youtube",getActivity().getPackageManager())){
+            //kalau youtube terinstall
+            Intent openYoutubePlayerActivity = new Intent(getActivity().getApplicationContext(), YoutubePlayer.class);
+            openYoutubePlayerActivity.putExtra(YoutubePlayer.KEY_VIDEO_ID, videoId);
+            startActivity(openYoutubePlayerActivity);
+        } else {
+            //kalau youtube tidak terinstall
+            String youtubeUrl = "https://www.youtube.com/watch?v=" + videoId;
+            Util.openUrl(youtubeUrl,getActivity().getApplicationContext());
+        }
     }
 
     @Override

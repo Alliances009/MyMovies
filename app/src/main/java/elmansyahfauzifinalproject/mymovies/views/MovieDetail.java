@@ -1,6 +1,7 @@
 package elmansyahfauzifinalproject.mymovies.views;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.android.youtube.player.YouTubePlayer;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -24,6 +26,7 @@ import elmansyahfauzifinalproject.mymovies.R;
 import elmansyahfauzifinalproject.mymovies.model.Result;
 import elmansyahfauzifinalproject.mymovies.utils.UrlComposer;
 import elmansyahfauzifinalproject.mymovies.utils.FavoriteMovie;
+import elmansyahfauzifinalproject.mymovies.utils.Util;
 import io.realm.Realm;
 
 public class MovieDetail extends DialogFragment {
@@ -182,6 +185,8 @@ public class MovieDetail extends DialogFragment {
             }
         }
     }
+
+
 
     @Override
     public void onDestroyView() {

@@ -19,9 +19,21 @@
             </intent-filter>
         </activity>
         <activity android:name=".Detail" />
-        <activity android:name=".views.MovieDetail" />
+        <activity
+            android:name=".views.MovieDetail" >
+            <intent-filter>
+                <action android:name="elmansyahfauzifinalproject.mymovies.MovieDetail"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".views.MovieReview" />
         <activity android:name=".views.MovieVideo"></activity>
+        <activity
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:name=".views.YoutubePlayer">
+            <intent-filter>
+                <action android:name="elmansyahfauzifinalproject.mymovies.YoutubePlayer"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
