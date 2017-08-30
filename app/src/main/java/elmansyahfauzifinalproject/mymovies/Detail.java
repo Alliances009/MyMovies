@@ -8,9 +8,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.RelativeLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import elmansyahfauzifinalproject.mymovies.model.Movie;
 import elmansyahfauzifinalproject.mymovies.views.MovieDetail;
 import elmansyahfauzifinalproject.mymovies.views.MovieReview;
 import elmansyahfauzifinalproject.mymovies.views.MovieVideo;
@@ -24,16 +28,43 @@ public class Detail extends AppCompatActivity implements ActionBar.TabListener {
 
     private static ActionBar actionBar;
     private static FragmentManager fragmentManager;
+    static RelativeLayout loadingPage;
+    private MovieVideo fragVideo;
+    private MovieReview fragReview;
+    private MovieDetail fragDetail;
+
+    public static void loadingShow(){
+        loadingPage.setVisibility(View.VISIBLE);
+    }
+
+    public static void loadingHide(){
+        loadingPage.setVisibility(View.GONE);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_detail);
         ButterKnife.bind(this);
+        loadingPage = (RelativeLayout) findViewById(R.id.loadingPage);
         initComponent();
     }
 
     private void initComponent() {
+        Bundle bundle = getIntent().getExtras();
+        Fragment frag = null;
+        if (bundle == null) {
+            bundle = null;
+        }
+        fragVideo = new MovieVideo();
+        fragReview = new MovieReview();
+        fragDetail = new MovieDetail();
+        fragReview.setArguments(bundle);
+        fragVideo.setArguments(bundle);
+        fragDetail.setArguments(bundle);
+        fragDetail.isLoad = false;
+        fragVideo.isLoad = false;
+        fragReview.isLoad = false;
         viewPager = (ViewPager) findViewById(R.id.vp_main);
         fragmentManager = getSupportFragmentManager();
         viewPager.setAdapter(new MyAdapter(fragmentManager));
@@ -64,19 +95,15 @@ public class Detail extends AppCompatActivity implements ActionBar.TabListener {
 
         @Override
         public Fragment getItem(int position) {
-            Bundle bundle = getIntent().getExtras();
             Fragment frag = null;
-            if (bundle == null){
-                bundle = null;
+            if (position == 0) {
+                frag = fragDetail;
+            } else if (position == 1) {
+                frag = fragReview;
+            } else if (position == 2) {
+                frag = fragVideo;
+
             }
-            if (position == 0){
-                frag = new MovieDetail();
-            }else if(position == 1){
-                frag = new MovieReview();
-            }else if(position == 2){
-                frag = new MovieVideo();
-            }
-            frag.setArguments(bundle);
             return frag;
         }
 
@@ -89,9 +116,9 @@ public class Detail extends AppCompatActivity implements ActionBar.TabListener {
     private void setTabs() {
         actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        android.support.v7.app.ActionBar.Tab tabDetail = actionBar.newTab();
-        android.support.v7.app.ActionBar.Tab tabReviews = actionBar.newTab();
-        android.support.v7.app.ActionBar.Tab tabVideos = actionBar.newTab();
+        ActionBar.Tab tabDetail = actionBar.newTab();
+        ActionBar.Tab tabReviews = actionBar.newTab();
+        ActionBar.Tab tabVideos = actionBar.newTab();
         tabDetail.setText("Detail");
         tabReviews.setText("Reviews");
         tabVideos.setText("Videos");

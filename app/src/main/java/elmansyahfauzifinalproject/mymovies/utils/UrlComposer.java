@@ -75,7 +75,7 @@ public class UrlComposer {
         return Uri.parse("https://image.tmdb.org").buildUpon()
                 .appendPath("t")
                 .appendPath("p")
-                .appendEncodedPath("w185" + posterPath)
+                .appendEncodedPath("w342" + posterPath)
                 .build().toString();
     }
 

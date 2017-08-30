@@ -33,7 +33,7 @@ public class MovieReview extends Fragment {
     Unbinder unbinder;
     private View view = null;
     private Call<ReviewResult> reviewResult;
-
+    public boolean isLoad = false;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_movie_review, container, false);
@@ -59,34 +59,39 @@ public class MovieReview extends Fragment {
     }
 
     private void getReviewList(Integer movieId) {
-        reviewResult = ServiceGenerator
-                .createService(MovieAPI.class)
-                .getReviews(movieId);
+        if (!isLoad) {
+            Detail.loadingShow();
+            reviewResult = ServiceGenerator
+                    .createService(MovieAPI.class)
+                    .getReviews(movieId);
 
-        reviewResult.enqueue(new Callback<ReviewResult>() {
-            @Override
-            public void onResponse(Call<ReviewResult> call, Response<ReviewResult> response) {
-                ReviewResult res = response.body();
-                if (res != null) {
-                    List<Review> data = res.getResults();
-                    Log.d(TAG, "onResponse: 1 "+data);
-                    for (Review review : data) {
-                        Log.d(TAG, "onResponse: 2 "+review.getAuthor());
-                        View reviewRow = GenerateView.getReview(
-                                getActivity().getApplicationContext(),
-                                review.getAuthor(),
-                                review.getContent()
-                        );
-                        llReview.addView(reviewRow);
+            reviewResult.enqueue(new Callback<ReviewResult>() {
+                @Override
+                public void onResponse(Call<ReviewResult> call, Response<ReviewResult> response) {
+                    ReviewResult res = response.body();
+                    if (res != null) {
+                        List<Review> data = res.getResults();
+                        Log.d(TAG, "onResponse: 1 " + data);
+                        for (Review review : data) {
+                            Log.d(TAG, "onResponse: 2 " + review.getAuthor());
+                            View reviewRow = GenerateView.getReview(
+                                    getActivity().getApplicationContext(),
+                                    review.getAuthor(),
+                                    review.getContent()
+                            );
+                            llReview.addView(reviewRow);
+                            isLoad = true;
+                            Detail.loadingHide();
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<ReviewResult> call, Throwable t) {
-
-            }
-        });
+                @Override
+                public void onFailure(Call<ReviewResult> call, Throwable t) {
+                    Detail.loadingHide();
+                }
+            });
+        }
     }
 
     @Override

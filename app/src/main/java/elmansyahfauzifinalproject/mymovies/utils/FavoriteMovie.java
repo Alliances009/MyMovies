@@ -3,7 +3,9 @@ package elmansyahfauzifinalproject.mymovies.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import elmansyahfauzifinalproject.mymovies.model.Genre;
 import elmansyahfauzifinalproject.mymovies.model.Result;
+import elmansyahfauzifinalproject.mymovies.model.SingleMovie;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 
@@ -21,14 +23,15 @@ public class FavoriteMovie extends RealmObject {
     public String posterPath;
     public String originalLanguage;
     public String originalTitle;
-    public RealmList<IntegerObject> genreIds;
+    public RealmList<GenreObject> genres;
     public String backdropPath;
     public boolean adult;
     public String overview;
     public String releaseDate;
+    public Integer runtime;
 
 
-    public static FavoriteMovie getMovie(Result result) {
+    public static FavoriteMovie getMovie(SingleMovie result) {
         FavoriteMovie favoriteMovie = new FavoriteMovie();
         favoriteMovie.voteCount = result.getVoteCount();
         favoriteMovie.id = result.getId();
@@ -42,14 +45,15 @@ public class FavoriteMovie extends RealmObject {
         favoriteMovie.backdropPath = result.getBackdropPath();
         favoriteMovie.adult = result.getAdult();
         favoriteMovie.overview = result.getOverview();
+        favoriteMovie.runtime= result.getRuntime();
         favoriteMovie.releaseDate = result.getReleaseDate();
-
-        favoriteMovie.genreIds = new RealmList<>();
-        List<Integer> genreIds = result.getGenreIds();
-        for (Integer genreId : genreIds) {
-            IntegerObject integerObject = new IntegerObject();
-            integerObject.integer = genreId;
-            favoriteMovie.genreIds.add(integerObject);
+        favoriteMovie.genres = new RealmList<>();
+        List<Genre> genreIds = result.getGenres();
+        for (Genre genre : genreIds) {
+            GenreObject genreObject = new GenreObject();
+            genreObject.setId(genre.getId());
+            genreObject.setName(genre.getName());
+            favoriteMovie.genres.add(genreObject);
         }
         return favoriteMovie;
     }
@@ -69,13 +73,34 @@ public class FavoriteMovie extends RealmObject {
         result.setAdult(favoriteMovie.adult);
         result.setOverview(favoriteMovie.overview);
         result.setReleaseDate(favoriteMovie.releaseDate);
+        return result;
+    }
 
-        List<Integer> genreList = new ArrayList<>();
-        RealmList<IntegerObject> integerObjectRealmList = favoriteMovie.genreIds;
-        for (IntegerObject integerObject : integerObjectRealmList) {
-            genreList.add(integerObject.integer);
+    public static SingleMovie setSingleMovie(FavoriteMovie favoriteMovie) {
+        SingleMovie result = new SingleMovie();
+        result.setVoteCount(favoriteMovie.voteCount);
+        result.setId(favoriteMovie.id);
+        result.setVideo(favoriteMovie.video);
+        result.setVoteAverage(favoriteMovie.voteAverage);
+        result.setTitle(favoriteMovie.title);
+        result.setPopularity(favoriteMovie.popularity);
+        result.setPosterPath(favoriteMovie.posterPath);
+        result.setOriginalLanguage(favoriteMovie.originalLanguage);
+        result.setOriginalTitle(favoriteMovie.originalTitle);
+        result.setBackdropPath(favoriteMovie.backdropPath);
+        result.setAdult(favoriteMovie.adult);
+        result.setOverview(favoriteMovie.overview);
+        result.setRuntime(favoriteMovie.runtime);
+        result.setReleaseDate(favoriteMovie.releaseDate);
+        List<Genre> genreList = new ArrayList<>();
+        RealmList<GenreObject> genreObjectRealmList = favoriteMovie.genres;
+        for (GenreObject genreObject : genreObjectRealmList) {
+            Genre genre = new Genre();
+            genre.setName(genreObject.getName());
+            genre.setId(genreObject.getId());
+            genreList.add(genre);
         }
-        result.setGenreIds(genreList);
+        result.setGenres(genreList);
         return result;
     }
 }

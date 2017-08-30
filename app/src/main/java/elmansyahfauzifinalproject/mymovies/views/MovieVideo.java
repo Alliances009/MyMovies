@@ -35,6 +35,7 @@ public class MovieVideo extends Fragment {
     Unbinder unbinder;
     private View view = null;
     private Call<VideoResult> videoResult;
+    public boolean isLoad = false;
 
     @Nullable
     @Override
@@ -53,6 +54,8 @@ public class MovieVideo extends Fragment {
     }
 
     private void getVideoList(Integer id) {
+        if (!isLoad){
+            Detail.loadingShow();
         videoResult = ServiceGenerator
                 .createService(MovieAPI.class)
                 .getVideos(id);
@@ -77,15 +80,18 @@ public class MovieVideo extends Fragment {
                                                        }
                             );
                             llVideo.addView(viewRow);
+                            isLoad = true;
+                            Detail.loadingHide();
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<VideoResult> call, Throwable t) {
-
+                Detail.loadingHide();
             }
         });
+        }
     }
 
     private Result getData()
